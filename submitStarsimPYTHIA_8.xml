@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<job nProcesses="100" simulateSubmission="false">
+    <command>
+
+        @ seed = &random; + $JOBINDEX
+
+        starver SL16j_embed
+
+        root4star -b -q starsim.C\(&nevents;,&energy;,$seed,\"&config;\"\) > $JOBID.log
+
+        mv pythia8.&tune;.starsim.root $JOBID.pythia8.&tune;.starsim.root
+
+    </command>
+    
+    <stdout URL="file:&submitdir;/jobs/&productionId;/sched$JOBID.out" />
+    <stderr URL="file:&submitdir;/jobs/&productionId;/sched$JOBID.err" />
+    <output fromScratch="*.starsim.root"   toURL="file:&submitdir;/production/&productionId;/" />
+    <output fromScratch="*.log"            toURL="file:&submitdir;/jobs/&productionId;/"/>
+
+    <SandBox>
+        <Package>
+            <File>file:/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/StRoot</File>
+            <File>file:/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/.sl73_gcc485</File>
+            <File>file:/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/starsim.C</File>
+        </Package>
+    </SandBox>
+
+    <Generator>
+        <Location>&submitdir;/SubmitInfo</Location>
+    </Generator>
+</job>
