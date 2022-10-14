@@ -32,8 +32,8 @@ void run_new()   //0 = D0, 1 = D+-
 
   ifstream fileList;
    
-  out = "./output/output_Lambda_pp_200_MB_100k_events.root";
-  fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2022-10-05_16-04/fileList.list");
+  out = "./output/output_Lambda_pp_510_MB_1M_events_daughter_open_cuts.root";
+  fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2022-10-14_13-34__pp_510_MB_Lambda_filt_open_cuts/fileList.list");
   //fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2020-08-12_06-39/simdata/pythia8/sngdmeson/outFileList.list");
 
 
@@ -54,12 +54,7 @@ void run_new()   //0 = D0, 1 = D+-
   genevents_new t(myChain);
 
   //genevents *t = new genevents(myChain);
-/*
-	if (out == "out.root") {
-		out = in;
-		out.ReplaceAll(".root","_histo.root");
-	}
-*/
+
 	t.setoutputFileName(out);
 	t.Loop();
 

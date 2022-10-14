@@ -376,8 +376,8 @@ void starsim( Int_t nevents=1000, Int_t collEnergy = 200, UInt_t rngSeed = 12345
   {
     sngLambdaPiPFilter = new StLambdaPiPFilter();
     //StLambdaPiPFilter::SetDauKine(double ptMin1, double ptMax1, double etaMin1, double etaMax1, double phiMin1, double phiMax1, double ptMin2, double ptMax2, double etaMin2, double etaMax2, double phiMin2, double phiMax2)
-    //sngLambdaPiPFilter->SetDauKine(0.15, 20., -1, 1, 0, 2*TMath::Pi(), 0.15, 20., -1, 1, 0, 2*TMath::Pi());
-    sngLambdaPiPFilter->SetDauKine(0.15, 20., -1, 1, -TMath::Pi(), TMath::Pi(), 0.15, 20., -1, 1, -TMath::Pi(), TMath::Pi());
+    //sngLambdaPiPFilter->SetDauKine(0.15, 20., -1, 1, -TMath::Pi(), TMath::Pi(), 0.15, 20., -1, 1, -TMath::Pi(), TMath::Pi()); //analysis cuts
+    sngLambdaPiPFilter->SetDauKine(0., 1e6, -100, 100, -TMath::Pi(), TMath::Pi(), 0., 1e6, -100, 100, -TMath::Pi(), TMath::Pi()); //open cuts for check of acceptance effect
     sngLambdaPiPFilter->SetParentRapidities(-1, 1, -1, 1); //setter for mother rapidities (Lambda and Lambda-bar)
 
     _primary->AddFilter( sngLambdaPiPFilter );

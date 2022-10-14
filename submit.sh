@@ -5,9 +5,9 @@ echo $submitdir
 
 prodId=`date +%F_%H-%M`
 
-nevents=10000 #for pp 200
+nevents=10000
 
-energy=510 #collisions energy
+energy=200 #collisions energy
 
 random=$RANDOM
 

@@ -5,6 +5,7 @@
 #include <TCanvas.h>
 #include <stdio.h>
 
+
 void genevents_new::Loop() 
 {
 	//   In a ROOT session, you can do:
@@ -55,13 +56,10 @@ void genevents_new::Loop()
   TLorentzVector pi_fourmom;
 
 
-  
-
-
   //histograms
   TH1D* L0_pt_hist = new TH1D("L0_pt_hist","L0_pt_hist",100,0,10);
 	TH1D* L0_mass_hist = new TH1D("L0_mass_hist","L0_mass_hist",100,1.,1.2);
-
+	
   TH1D *L0_thetaProdPlane[nPtBins+1][nEtaBins+1];
   TH1D *L0_cosThetaProdPlane[nPtBins+1][nEtaBins+1];
 
@@ -128,12 +126,17 @@ void genevents_new::Loop()
 
         //Lambda fourmomentum
         L_fourmom.SetPxPyPzE(mParticles_mPx[i], mParticles_mPy[i], mParticles_mPz[i], mParticles_mEnergy[i]);
+        
+        //if( fabs(L_fourmom.Eta()) >= 0.5 ) continue;
+        
         L_fourmom_reverse.SetPxPyPzE(-mParticles_mPx[i], -mParticles_mPy[i], -mParticles_mPz[i], mParticles_mEnergy[i]);
         
 
         p_fourmom.SetPxPyPzE(mParticles_mPx[daughter1_Id], mParticles_mPy[daughter1_Id], mParticles_mPz[daughter1_Id], mParticles_mEnergy[daughter1_Id]);
         pi_fourmom.SetPxPyPzE(mParticles_mPx[daughter2_Id], mParticles_mPy[daughter2_Id], mParticles_mPz[daughter2_Id], mParticles_mEnergy[daughter2_Id]);
-
+        
+        //if( fabs(p_fourmom.Eta()) >= 0.5 || fabs(pi_fourmom.Eta()) >= 0.5 ) continue; //for test of daugter acceptance
+        
 
         TLorentzVector p_fourmom_star = p_fourmom;
         p_fourmom_star.Boost(L_fourmom_reverse.BoostVector());  
