@@ -27,6 +27,8 @@
 #include "TMath.h"
 #include <vector>
 
+using namespace std;
+
 
 // Header file for the classes stored in the TTree if any.
 //#include "/home/vanekjan/root5/root/core/base/inc/TObject.h"
@@ -170,7 +172,7 @@ class genevents_new {
 		virtual Int_t    GetEntry(Long64_t entry);
 		virtual Long64_t LoadTree(Long64_t entry);
 		virtual void     Init(TTree *tree);
-		virtual void     Loop();
+		virtual void     Loop(int daughterCuts, float energy);
 		virtual Bool_t   Notify();
 		virtual void     Show(Long64_t entry = -1);
 

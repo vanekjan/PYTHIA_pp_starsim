@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-void genevents_new::Loop() 
+void genevents_new::Loop(int daughterCuts, float energy) //0 - no additional cuts on dacay daughters, 1 - apply additional cuts
 {
 	//   In a ROOT session, you can do:
 	//      Root > .L genevents.C
@@ -60,27 +60,79 @@ void genevents_new::Loop()
   TH1D* L0_pt_hist = new TH1D("L0_pt_hist","L0_pt_hist",100,0,10);
 	TH1D* L0_mass_hist = new TH1D("L0_mass_hist","L0_mass_hist",100,1.,1.2);
 	
+	TH2D* L0_pT_vs_L0_y = new TH2D("L0_pT_vs_L0_y", "L0_pT_vs_L0_y", 100, 0, 10, 100, -1, 1);
+	
   TH1D *L0_thetaProdPlane[nPtBins+1][nEtaBins+1];
   TH1D *L0_cosThetaProdPlane[nPtBins+1][nEtaBins+1];
+  
+  TH2D *L0_y_vs_p_eta[nPtBins+1];
+  TH2D *L0_y_vs_pi_eta[nPtBins+1];
+  
+  TH1D *L0_pz[nPtBins+1][nEtaBins+1];
+  TH1D *L0_xF[nPtBins+1][nEtaBins+1];
+  
+  TH2D *L0_pT_vs_L0_pz[nEtaBins+1];
+  
+  
+  TH2D *L0_p_eta_vs_pi_eta[nPtBins+1];
 
 
   TH1D* L0bar_pt_hist = new TH1D("L0bar_pt_hist","L0bar_pt_hist",100,0,10);
 	TH1D* L0bar_mass_hist = new TH1D("L0bar_mass_hist","L0bar_mass_hist",100,1.,1.2);
+	
+	TH2D* L0bar_pT_vs_L0bar_y = new TH2D("L0bar_pT_vs_L0bar_y", "L0bar_pT_vs_L0bar_y", 100, 0, 10, 100, -1, 1);
 
   TH1D *L0bar_thetaProdPlane[nPtBins+1][nEtaBins+1];
   TH1D *L0bar_cosThetaProdPlane[nPtBins+1][nEtaBins+1];
+  
+  TH2D *L0bar_y_vs_p_eta[nPtBins+1];  
+  TH2D *L0bar_y_vs_pi_eta[nPtBins+1];
+  
+  TH1D *L0bar_pz[nPtBins+1][nEtaBins+1];
+  TH1D *L0bar_xF[nPtBins+1][nEtaBins+1];
+  
+  TH2D *L0bar_pT_vs_L0bar_pz[nEtaBins+1];
+  
+  TH2D *L0bar_p_eta_vs_pi_eta[nPtBins+1];
+  
+  
 
   for(unsigned int pTbin = 0; pTbin < nPtBins+1; pTbin++)
   {
+    L0_y_vs_p_eta[pTbin] = new TH2D(Form("L0_y_vs_p_eta_pT_%i", pTbin), Form("L0_y_vs_p_eta_pT_%i", pTbin), 100, -1, 1, 500, -5, 5);
+    L0_y_vs_pi_eta[pTbin] = new TH2D(Form("L0_y_vs_pi_eta_pT_%i", pTbin), Form("L0_y_vs_pi_eta_pT_%i", pTbin), 100, -1, 1, 500, -5, 5);
+    
+    L0_p_eta_vs_pi_eta[pTbin] = new TH2D(Form("L0_p_eta_vs_pi_eta_L0_pT_%i", pTbin), Form("L0_p_eta_vs_pi_eta_L0_pT_%i", pTbin), 500, -5, 5, 500, -5, 5);
+    
+    L0bar_y_vs_p_eta[pTbin] = new TH2D(Form("L0bar_y_vs_p_eta_pT_%i", pTbin), Form("L0bar_y_vs_p_eta_pT_%i", pTbin), 100, -1, 1, 500, -5, 5);
+    L0bar_y_vs_pi_eta[pTbin] = new TH2D(Form("L0bar_y_vs_pi_eta_pT_%i", pTbin), Form("L0bar_y_vs_pi_eta_pT_%i", pTbin), 100, -1, 1, 500, -5, 5);
+    
+    L0bar_p_eta_vs_pi_eta[pTbin] = new TH2D(Form("L0bar_p_eta_vs_pi_eta_L0_pT_%i", pTbin), Form("L0bar_p_eta_vs_pi_eta_L0_pT_%i", pTbin), 500, -5, 5, 500, -5, 5);
+    
+    
+  
     for(unsigned int etaBin = 0; etaBin < nEtaBins+1; etaBin++)
     {
+      if(pTbin == 0)
+      {
+        L0_pT_vs_L0_pz[etaBin] = new TH2D(Form("L0_pT_vs_L0_pz_eta_%i", etaBin), Form("L0_pT_vs_L0_pz_eta_%i", etaBin), 100, 0, 10, 200, -10, 10);
+        
+        L0bar_pT_vs_L0bar_pz[etaBin] = new TH2D(Form("L0bar_pT_vs_L0bar_pz_eta_%i", etaBin), Form("L0bar_pT_vs_L0bar_pz_eta_%i", etaBin), 100, 0, 10, 200, -10, 10);    
+      }
+    
 
       L0_thetaProdPlane[pTbin][etaBin] = new TH1D(Form("L0_thetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), Form("L0_thetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), 20, 0, TMath::Pi());
       L0_cosThetaProdPlane[pTbin][etaBin] = new TH1D(Form("L0_cosThetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), Form("L0_cosThetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), 20, -1, 1);
+      
+      L0_pz[pTbin][etaBin] = new TH1D(Form("L0_pz_pT_%i_eta__%i", pTbin, etaBin), Form("L0_pz_pT_%i_eta_%i", pTbin, etaBin), 200,-10, 10);
+      L0_xF[pTbin][etaBin] = new TH1D(Form("L0_xF_pT_%i_eta__%i", pTbin, etaBin), Form("L0_xF_pT_%i_eta_%i", pTbin, etaBin), 100, 0, 0.01);
 
       L0bar_thetaProdPlane[pTbin][etaBin] = new TH1D(Form("L0bar_thetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), Form("L0bar_thetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), 20, 0, TMath::Pi());
       L0bar_cosThetaProdPlane[pTbin][etaBin] = new TH1D(Form("L0bar_cosThetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), Form("L0bar_cosThetaProdPlane_pT_%i_eta_%i", pTbin, etaBin), 20, -1, 1);
-    
+      
+      L0bar_pz[pTbin][etaBin] = new TH1D(Form("L0bar_pz_pT_%i_eta__%i", pTbin, etaBin), Form("L0bar_pz_pT_%i_eta_%i", pTbin, etaBin), 200, -10, 10);
+      L0bar_xF[pTbin][etaBin] = new TH1D(Form("L0bar_xF_pT_%i_eta__%i", pTbin, etaBin), Form("L0bar_xF_pT_%i_eta_%i", pTbin, etaBin), 100, 0, 0.01);
+       
     }
 
   }
@@ -127,15 +179,26 @@ void genevents_new::Loop()
         //Lambda fourmomentum
         L_fourmom.SetPxPyPzE(mParticles_mPx[i], mParticles_mPy[i], mParticles_mPz[i], mParticles_mEnergy[i]);
         
+        double L_xF = fabs(L_fourmom.Pz())/energy/2.; //proton in beam has momentum mCmsEnergy/2.
+                
         //if( fabs(L_fourmom.Eta()) >= 0.5 ) continue;
         
         L_fourmom_reverse.SetPxPyPzE(-mParticles_mPx[i], -mParticles_mPy[i], -mParticles_mPz[i], mParticles_mEnergy[i]);
-        
+                
 
         p_fourmom.SetPxPyPzE(mParticles_mPx[daughter1_Id], mParticles_mPy[daughter1_Id], mParticles_mPz[daughter1_Id], mParticles_mEnergy[daughter1_Id]);
-        pi_fourmom.SetPxPyPzE(mParticles_mPx[daughter2_Id], mParticles_mPy[daughter2_Id], mParticles_mPz[daughter2_Id], mParticles_mEnergy[daughter2_Id]);
+        pi_fourmom.SetPxPyPzE(mParticles_mPx[daughter2_Id], mParticles_mPy[daughter2_Id], mParticles_mPz[daughter2_Id], mParticles_mEnergy[daughter2_Id]); 
         
-        //if( fabs(p_fourmom.Eta()) >= 0.5 || fabs(pi_fourmom.Eta()) >= 0.5 ) continue; //for test of daugter acceptance
+        
+        
+        if( daughterCuts == 1 )
+        {
+          if( fabs(p_fourmom.Eta()) >= 1. || fabs(pi_fourmom.Eta()) >= 1. ) continue;
+          
+          if( p_fourmom.Pt() < 0.15 || p_fourmom.Pt() > 20. ) continue;
+          if( pi_fourmom.Pt() < 0.15 || pi_fourmom.Pt() > 20. ) continue;
+        }
+        
         
 
         TLorentzVector p_fourmom_star = p_fourmom;
@@ -186,6 +249,8 @@ void genevents_new::Loop()
         {
           L0_mass_hist->Fill(mParticles_mMass[i]);
           L0_pt_hist->Fill(L_fourmom.Pt());
+          
+          L0_pT_vs_L0_y->Fill(L_fourmom.Pt(), L_fourmom.Rapidity());
 
           L0_thetaProdPlane[pT_bin][eta_bin]->Fill(mThetaProdPlane);
           L0_thetaProdPlane[nPtBins][eta_bin]->Fill(mThetaProdPlane);  //pT integrated, eta bins
@@ -197,6 +262,28 @@ void genevents_new::Loop()
           L0_cosThetaProdPlane[nPtBins][eta_bin]->Fill(cos(mThetaProdPlane));
           L0_cosThetaProdPlane[pT_bin][nEtaBins]->Fill(cos(mThetaProdPlane));
           L0_cosThetaProdPlane[nPtBins][nEtaBins]->Fill(cos(mThetaProdPlane));
+          
+          L0_y_vs_p_eta[pT_bin]->Fill(L_fourmom.Rapidity(), p_fourmom.Eta());
+          L0_y_vs_pi_eta[pT_bin]->Fill(L_fourmom.Rapidity(), pi_fourmom.Eta());
+          
+          L0_y_vs_p_eta[nPtBins]->Fill(L_fourmom.Rapidity(), p_fourmom.Eta());
+          L0_y_vs_pi_eta[nPtBins]->Fill(L_fourmom.Rapidity(), pi_fourmom.Eta());
+          
+          L0_p_eta_vs_pi_eta[pT_bin]->Fill(p_fourmom.Eta(), pi_fourmom.Eta());
+          L0_p_eta_vs_pi_eta[nPtBins]->Fill(p_fourmom.Eta(), pi_fourmom.Eta());
+          
+          L0_pT_vs_L0_pz[eta_bin]->Fill(L_fourmom.Pt(), L_fourmom.Pz());
+          L0_pT_vs_L0_pz[nEtaBins]->Fill(L_fourmom.Pt(), L_fourmom.Pz());          
+          
+          L0_pz[pT_bin][eta_bin]->Fill(L_fourmom.Pz());
+          L0_pz[nPtBins][eta_bin]->Fill(L_fourmom.Pz());
+          L0_pz[pT_bin][nEtaBins]->Fill(L_fourmom.Pz());
+          L0_pz[nPtBins][nEtaBins]->Fill(L_fourmom.Pz());          
+          
+          L0_xF[pT_bin][eta_bin]->Fill(L_xF);
+          L0_xF[nPtBins][eta_bin]->Fill(L_xF);
+          L0_xF[pT_bin][nEtaBins]->Fill(L_xF);
+          L0_xF[nPtBins][nEtaBins]->Fill(L_xF);
 
         }
 
@@ -205,6 +292,8 @@ void genevents_new::Loop()
         {
           L0bar_mass_hist->Fill(mParticles_mMass[i]);
           L0bar_pt_hist->Fill(L_fourmom.Pt());
+          
+          L0bar_pT_vs_L0bar_y->Fill(L_fourmom.Pt(), L_fourmom.Rapidity());
 
           L0bar_thetaProdPlane[pT_bin][eta_bin]->Fill(mThetaProdPlane);
           L0bar_thetaProdPlane[nPtBins][eta_bin]->Fill(mThetaProdPlane);
@@ -215,13 +304,33 @@ void genevents_new::Loop()
           L0bar_cosThetaProdPlane[nPtBins][eta_bin]->Fill(cos(mThetaProdPlane));
           L0bar_cosThetaProdPlane[pT_bin][nEtaBins]->Fill(cos(mThetaProdPlane));
           L0bar_cosThetaProdPlane[nPtBins][nEtaBins]->Fill(cos(mThetaProdPlane));
+          
+          L0bar_y_vs_p_eta[pT_bin]->Fill(L_fourmom.Rapidity(), p_fourmom.Eta());
+          L0bar_y_vs_pi_eta[pT_bin]->Fill(L_fourmom.Rapidity(), pi_fourmom.Eta());
+          
+          L0bar_y_vs_p_eta[nPtBins]->Fill(L_fourmom.Rapidity(), p_fourmom.Eta());
+          L0bar_y_vs_pi_eta[nPtBins]->Fill(L_fourmom.Rapidity(), pi_fourmom.Eta());
+          
+          
+          L0bar_p_eta_vs_pi_eta[pT_bin]->Fill(p_fourmom.Eta(), pi_fourmom.Eta());
+          L0bar_p_eta_vs_pi_eta[nPtBins]->Fill(p_fourmom.Eta(), pi_fourmom.Eta());
+          
+          L0bar_pT_vs_L0bar_pz[eta_bin]->Fill(L_fourmom.Pt(), L_fourmom.Pz());
+          L0bar_pT_vs_L0bar_pz[nEtaBins]->Fill(L_fourmom.Pt(), L_fourmom.Pz());          
+          
+          L0bar_pz[pT_bin][eta_bin]->Fill(L_fourmom.Pz());
+          L0bar_pz[nPtBins][eta_bin]->Fill(L_fourmom.Pz());
+          L0bar_pz[pT_bin][nEtaBins]->Fill(L_fourmom.Pz());
+          L0bar_pz[nPtBins][nEtaBins]->Fill(L_fourmom.Pz());          
+          
+          L0bar_xF[pT_bin][eta_bin]->Fill(L_xF);
+          L0bar_xF[nPtBins][eta_bin]->Fill(L_xF);
+          L0bar_xF[pT_bin][nEtaBins]->Fill(L_xF);
+          L0bar_xF[nPtBins][nEtaBins]->Fill(L_xF);
+          
         }
-
-
         
-			}
-
-      
+			}      
 
 		}
 

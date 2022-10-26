@@ -23,17 +23,38 @@
 
 //class genevents_new;
 
-void run_new()   //0 = D0, 1 = D+-
+void run_new(float energy = 510)
 {
 	//TFile *_file0 = TFile::Open(in);
+	
+	
 
 
   TString out;
 
   ifstream fileList;
-   
-  out = "./output/output_Lambda_pp_510_MB_1M_events_daughter_open_cuts.root";
-  fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2022-10-14_13-34__pp_510_MB_Lambda_filt_open_cuts/fileList.list");
+  
+  if(energy == 510)
+  {
+    out = "./output/output_Lambda_pp_510_MB_1M_events_daughter_open_cuts.root";   
+    fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2022-10-14_13-34__pp_510_MB_Lambda_filt_open_cuts/fileList.list");  
+  } 
+  
+  
+  else if(energy == 200)
+  {
+    fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2022-10-14_17-29_pp_200_MB_Lambda_filt_open_cuts/fileList.list");
+    out = "./output/output_Lambda_pp_200_MB_1M_events_daughter_open_cuts.root";  
+  }
+  
+  else
+  {
+    cout<<"Invalid energy! Abborting!"<<endl;
+  
+  }
+  
+  
+  
   //fileList.open("/star/u/vanekjan/pwg/vanekjan/myPYTHIA_8_pp/production/2020-08-12_06-39/simdata/pythia8/sngdmeson/outFileList.list");
 
 
@@ -56,7 +77,7 @@ void run_new()   //0 = D0, 1 = D+-
   //genevents *t = new genevents(myChain);
 
 	t.setoutputFileName(out);
-	t.Loop();
+	t.Loop(0, energy); //0 - no additional cuts on dacay daughters, 1 - apply additional cuts
 
   fileList.close();
 
